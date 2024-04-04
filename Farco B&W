@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farco Call</title>
+<style>
+    body {
+        font-family: serif;
+        background-color: black;
+        color: gold;
+        text-align: center;
+    }
+    
+    h1 {
+        color: gold;
+    }
+    
+    input[type="tel"],
+    input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        width: 80%;
+        max-width: 300px;
+    }
+    
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: white;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+        animation: buttonClickAnimation 2s infinite;
+    }
+    
+    button:hover {
+        background-color: #ddd;
+    }
+
+    @keyframes buttonClickAnimation {
+        0%, 100% {
+            background-color: white;
+        }
+        50% {
+            background-color: green;
+        }
+    }
+    
+    .hide {
+        display: none;
+    }
+</style>
+</head>
+<body>
+    <h1>Farco</h1>
+    <button id="callPageButton">Call</button>
+    <button id="filterPageButton">Filter</button>
+
+    <div id="callPage">
+        <input type="tel" id="phoneNumber" placeholder="Phone Number">
+        <input type="text" id="message" placeholder="Type your message">
+        <button id="callButton">Call</button>
+        <button id="sendSMSButton">Send SMS</button>
+    </div>
+
+    <div id="filterPage" class="hide">
+        <input type="file" accept="image/*" id="fileInput" class="file-input" onchange="displayImage(this)">
+        <br>
+        <label for="fileInput" class="file-label">Select Image</label>
+        <br>
+        <div class="frame" id="frame"> <!-- Çerçeve -->
+            <img id="imageDisplay">
+        </div>
+        <br>
+        <button id="downloadButton" onclick="downloadFilter()">Download Filter</button>
+    </div>
+
+    <script>
+        document.getElementById("callPageButton").addEventListener("click", function() {
+            document.getElementById("callPage").classList.remove("hide");
+            document.getElementById("filterPage").classList.add("hide");
+        });
+
+        document.getElementById("filterPageButton").addEventListener("click", function() {
+            document.getElementById("callPage").classList.add("hide");
+            document.getElementById("filterPage").classList.remove("hide");
+        });
+
+        function displayImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var img = document.getElementById('imageDisplay');
+                    img.src = e.target.result;
+                    document.getElementById('frame').style.display = 'inline-block'; // Çerçeve görünür yap
+                    applyFilter(); // Otomatik olarak filtre uygula
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function applyFilter() {
+            var img = document.getElementById('imageDisplay');
+            img.style.filter = 'grayscale(100%)'; // Siyah beyaz efekti
+
+            // Filtrelenmiş resmi indirme linkini güncelle
+            document.getElementById('downloadButton').style.display = 'inline-block'; // Download butonunu görünür yap
+        }
+
+        function downloadFilter() {
+            var img = document.getElementById('imageDisplay');
+            var link = document.createElement('a');
+            link.href = img.src;
+            link.download = 'filtered_image.jpg';
+            link.click();
+        }
+    </script>
+</body>
+</html>
